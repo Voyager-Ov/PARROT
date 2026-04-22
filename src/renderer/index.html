@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Parrot</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="layout">
+      <aside class="sidebar glass">
+        <h1>🦜 Parrot</h1>
+        <p class="muted">Asistente creativo de escritorio</p>
+        <nav>
+          <button class="nav-btn active">Inicio</button>
+          <button class="nav-btn">Conversaciones</button>
+          <button class="nav-btn">Ajustes</button>
+        </nav>
+        <div class="status">
+          <span class="dot"></span>
+          Conectado
+        </div>
+      </aside>
+
+      <main class="content glass">
+        <header class="topbar">
+          <h2>Bienvenido a Parrot</h2>
+          <span id="app-version" class="chip">v...</span>
+        </header>
+
+        <section class="hero">
+          <h3>Tu espacio con estética neon tropical</h3>
+          <p>
+            Interfaz base lista para extender con tus flujos, prompts y módulos.
+          </p>
+        </section>
+
+        <section class="composer">
+          <input type="text" placeholder="Escribe una instrucción..." />
+          <button>Enviar</button>
+        </section>
+      </main>
+    </div>
+
+    <script src="./renderer.js"></script>
+  </body>
+</html>

@@ -1,0 +1,63 @@
+# Constitución Inmutable — Parrot Recorder
+
+## 1) Régimen SDD (Spec-as-Source)
+1. Este repositorio opera bajo **SDD Nivel 3 (Spec-as-Source)**.
+2. La especificación funcional/técnica es el contrato maestro; el código es un derivado.
+3. Ningún cambio de implementación se permite sin actualizar primero los artefactos de especificación.
+
+## 2) Artefactos Normativos Obligatorios
+Los artefactos de gobierno del proyecto son obligatorios y bloqueantes:
+- `.speckit.constitution` (este documento)
+- `brief.md`
+- `roadmap.md`
+- `design.md` (plan de diseño previo a cualquier implementación)
+
+## 3) Principios Inmutables
+- **Harness Thesis 95/5:** el valor principal reside en el harness (arquitectura, IPC, seguridad y captura), no en el modelo.
+- **Boundary-First Engineering:** se definen fronteras de proceso y contratos antes que la lógica interna.
+- **Privacidad por Diseño:** prohibida la captura indiscriminada de pantalla; prioridad absoluta a semántica de accesibilidad.
+
+## 4) Arquitectura y Fronteras
+- **Main Process:** ciclo de vida, APIs nativas de accesibilidad, persistencia, hardening del control plane.
+- **Renderer Process:** presentación/UI en sandbox Chromium.
+- **Preload:** único gateway de confianza vía `contextBridge`.
+- Cualquier fuga de lógica privilegiada al renderer se considera violación arquitectónica.
+
+## 5) Mandatos de Seguridad Electron
+- `contextIsolation: true` (obligatorio).
+- `nodeIntegration: false` (obligatorio).
+- Sin acceso directo de renderer a Node.js.
+- Prohibido módulo `remote`.
+- CSP estricta: prohibidos scripts inline y orígenes no confiables.
+
+## 6) Contratos IPC (Zod-Enforced)
+- Todo canal IPC debe definir y aplicar esquema Zod en runtime.
+- Mensajes fuera de esquema: **bloquear + registrar anomalía**.
+- Los contratos deben ser tipados y trazables (correlation IDs / metadata temporal).
+
+## 7) Política de Captura
+- Fuente primaria: Árbol de Accesibilidad (Windows UIA / macOS Accessibility API).
+- Fallback visual opcional únicamente cuando no exista metadata accesible.
+- Si se habilita fallback visual, debe aplicar minimización y privacidad (p.ej. blur/masking de zonas no esenciales).
+- Persistencia orientada a JSON estructurado (Task Ledger / workflow artifacts).
+
+## 8) Requisitos Funcionales Mínimos de Plataforma
+- RF-01 Aislamiento de procesos: caída renderer no detiene captura en main.
+- RF-02 Validación IPC con Zod: fuera de esquema se rechaza y audita.
+- RF-03 Captura semántica: extrae `role`, `label`, `value` sin píxeles por defecto.
+- RF-04 UI Cyber/Glassmorphism: base dark + acento `#00f3ff` con blur.
+- RF-05 MCP Diagnostics: telemetría de salud del motor en tiempo real.
+- RF-06 Spec-Driven Debugging: protocolo Root-Cause-First.
+
+## 9) Protocolo de Calidad
+- TDD obligatorio para componentes críticos de frontera (IPC, engine, seguridad).
+- Prohibido "quick patch" sin análisis causal.
+- Ante fallos: ejecutar Root-Cause-First en orden contrato (Zod) → frontera (IPC) → lógica nativa (SO bindings).
+
+## 10) Definición de Done
+Una tarea se considera terminada solo si:
+1. Se actualizó especificación relevante.
+2. Se respetan fronteras de proceso.
+3. Existe validación de contrato en runtime.
+4. Pasa pruebas de frontera + casos negativos.
+5. Se documentan riesgos de seguridad y privacidad aplicables.
